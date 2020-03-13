@@ -1,0 +1,2 @@
+class JobStillRunningException(Exception):
+   pass
