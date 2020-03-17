@@ -2,7 +2,7 @@
 
 This package allows to run a Jupyter notebook at Google Cloud AI Platform Training Jobs.
 
-##Syntax
+## Syntax
 
 ```
 gcloud-notebook-training [-h] --input-notebook INPUT_NOTEBOOK
