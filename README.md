@@ -2,6 +2,8 @@
 
 This package allows to run a Jupyter notebook at Google Cloud AI Platform Training Jobs.
 
+Install tool with pip by using `pip install gcloud-notebook-training`
+
 ## Syntax
 
 ```
