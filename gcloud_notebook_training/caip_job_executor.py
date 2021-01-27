@@ -28,7 +28,8 @@ class CaipJobExecutor:
     return constants.TRAINING_JOB_STATES_SUCCEEDED == response["state"]
 
   def submit_training_job(self, image_uri, region, input_notebook_uri,
-                          output_notebook_uri, accelerator_type, max_run_time):
+                          output_notebook_uri, accelerator_type,
+                          max_run_time, service_account):
       # Prepare the CAIP training payload
       training_inputs = {
           'scaleTier': 'CUSTOM',
@@ -54,6 +55,9 @@ class CaipJobExecutor:
             "count": 1,
             "type": accelerator_type
           }
+
+      if not service_account is None:
+        training_inputs['serviceAccount'] = service_account
 
       job_spec = {'jobId': self.__job_id, 'trainingInput': training_inputs}
 

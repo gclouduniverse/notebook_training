@@ -17,6 +17,7 @@ gcloud-notebook-training [-h] --input-notebook INPUT_NOTEBOOK
               [--max-running-time MAX_RUNNING_TIME]
               [--container-uri CONTAINER_URI]
               [--accelerator-type ACCELERATOR_TYPE]
+              [--service-account SERVICE_ACCOUNT]
 ```
 
 The only required parameter is --input-notebook.

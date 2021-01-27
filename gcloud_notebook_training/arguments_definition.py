@@ -14,6 +14,7 @@ def parse_args():
   parser.add_argument("--max-running-time", required=False)
   parser.add_argument("--container-uri", required=False)
   parser.add_argument("--accelerator-type", required=False)
+  parser.add_argument("--service-account", required=False)
 
   args = parser.parse_args()
   return args

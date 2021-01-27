@@ -6,14 +6,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gcloud-notebook-training",
-    version="0.0.11",
+    version="0.0.12",
     author="Yuri Chernikov",
     author_email="chernikov@google.com",
     description="Execute Jupyter notebooks in Google Cloud AI training jobs",
     long_description="This package allows to run a Jupyter notebook at Google Cloud AI Platform Training Jobs",
     long_description_content_type="text/markdown",
     url="https://github.com/gclouduniverse/notebook_training.git",
-    download_url="https://github.com/gclouduniverse/notebook_training/archive/0.0.11.tar.gz",
+    download_url="https://github.com/gclouduniverse/notebook_training/archive/0.0.12.tar.gz",
     packages=setuptools.find_packages(),
     install_requires=[
         'gcloud>=0.18.3',

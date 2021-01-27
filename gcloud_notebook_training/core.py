@@ -113,7 +113,8 @@ def execute():
   # Run CAIP training
   try:
     caip_job_executor.submit_training_job(image_uri, region, input_notebook_uri,
-                        output_notebook_uri, args.accelerator_type, max_running_time)
+                        output_notebook_uri, args.accelerator_type,
+                        max_running_time, args.service_account)
   except errors.HttpError as err:
     logging.error('There was an error while running the training job.')
     logging.error(err._get_reason())
