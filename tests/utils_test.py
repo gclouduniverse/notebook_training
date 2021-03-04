@@ -31,3 +31,10 @@ def test_get_output_notebook_with_wrong_extension():
 def test_get_output_notebook_without_extension():
     assert "/local/path/notebook_output" \
         == utils.get_output_notebook("/local/path/notebook")
+
+def test_notebook_is_in_path():
+    assert utils.notebook_is_in_path("/local/path/notebook.ipynb", "/local/path")
+    assert utils.notebook_is_in_path("/local/path/notebook.ipynb", "/local")
+    assert not utils.notebook_is_in_path("/local/path/notebook.ipynb", "/remote")
+    assert utils.notebook_is_in_path("gs://local/path/notebook.ipynb", "gs://local")
+

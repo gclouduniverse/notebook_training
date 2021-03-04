@@ -49,25 +49,12 @@ def execute():
 
   # Do we need to download or upload the notebook to GCS?
   input_nb_gcs_path_specified = utils.is_gcs_uri(args.input_notebook)
+  input_folder_gcs_path_specified = utils.is_gcs_uri(args.input_folder)
   output_nb_gcs_path_specified = utils.is_gcs_uri(output_notebook)
 
   # Get input and output notebooks names
   input_notebook_name = utils.get_notebook_name(args.input_notebook)
   output_notebook_name = utils.get_notebook_name(output_notebook)
-
-  # Get input notebook URI at GCS
-  if input_nb_gcs_path_specified:
-    input_notebook_uri = args.input_notebook
-  else:
-    input_gcs_file_path = utils.get_notebook_gcs_path(input_notebook_name, timestamp_str)
-    input_notebook_uri = utils.get_gcs_uri(bucket_name, input_gcs_file_path)
-
-  # Get output notebook URI at GCS
-  if output_nb_gcs_path_specified:
-    output_notebook_uri = output_notebook
-  else:
-    output_gcs_file_path = utils.get_notebook_gcs_path(output_notebook_name, timestamp_str)
-    output_notebook_uri = utils.get_gcs_uri(bucket_name, output_gcs_file_path)
 
   # Download notebook from GCS if needed
   input_nb_local_file_path = args.input_notebook
@@ -96,10 +83,36 @@ def execute():
   if job_id is None:
     job_id = utils.get_job_id(input_notebook_name, timestamp_str)
 
+  gcs_folder_path = ""
+  # Upload notebook folder if needed
+  if args.input_folder and not input_folder_gcs_path_specified:
+    bucket = gcs_utils.get_gcs_bucket(project_id, bucket_name)
+    top_folder = gcs_utils.get_top_folder(args.input_folder)
+    if not top_folder:
+      top_folder = input_notebook_name
+    gcs_folder_path = "gs://" + bucket_name + "/" + top_folder
+    gcs_utils.upload_local_directory_to_gcs(args.input_folder, bucket, top_folder)
+
   # Upload the notebook to GCS if needed
-  if not input_nb_gcs_path_specified:
-    gcs_utils.check_or_create_bucket(project_id, bucket_name)
-    gcs_utils.upload(args.input_notebook, project_id, bucket_name, input_gcs_file_path)
+  if input_nb_gcs_path_specified:
+    input_notebook_uri = args.input_notebook
+  else:
+    # We do not upload the input notebook to GCS if its path in included into input_folder path
+    if gcs_folder_path and args.input_notebook.startswith(args.input_folder):
+      input_notebook_uri = gcs_utils.get_notebook_uri_in_folder(args.input_notebook, args.input_folder, gcs_folder_path)
+    else:
+      input_notebook_uri = utils.get_gcs_uri(bucket_name, input_notebook_name)
+      bucket = gcs_utils.get_gcs_bucket(project_id, bucket_name)
+      gcs_utils.upload(args.input_notebook, bucket, input_notebook_name)
+
+
+  # Get output notebook URI at GCS
+  if output_nb_gcs_path_specified:
+    output_notebook_uri = output_notebook
+  else:
+    output_gcs_file_path = utils.get_notebook_gcs_path(output_notebook_name, timestamp_str)
+    output_notebook_uri = utils.get_gcs_uri(bucket_name, output_gcs_file_path)
+
 
   # Build a representation of the Cloud ML API.
   cloudml = discovery.build('ml', 'v1')
@@ -114,7 +127,8 @@ def execute():
   try:
     caip_job_executor.submit_training_job(image_uri, region, input_notebook_uri,
                         output_notebook_uri, args.accelerator_type,
-                        max_running_time, args.service_account)
+                        max_running_time, args.service_account,
+                        args.scale_tier, args.master_type)
   except errors.HttpError as err:
     logging.error('There was an error while running the training job.')
     logging.error(err._get_reason())

@@ -29,17 +29,16 @@ class CaipJobExecutor:
 
   def submit_training_job(self, image_uri, region, input_notebook_uri,
                           output_notebook_uri, accelerator_type,
-                          max_run_time, service_account):
+                          max_run_time, service_account,
+                          scale_tier, master_type):
       # Prepare the CAIP training payload
       training_inputs = {
-          'scaleTier': 'CUSTOM',
-          'masterType': 'complex_model_m',
-          'workerType': 'complex_model_m',
+          'scaleTier': scale_tier or 'CUSTOM',
+          'masterType': master_type or 'n1-standard-4',
           'masterConfig': {
             "imageUri": image_uri
           },
           'parameterServerType': 'large_model',
-          'workerCount': 1,
           'region': region,
           'pythonVersion': '3.7',
           'scheduling': {'maxRunningTime': '{}s'.format(max_run_time)},

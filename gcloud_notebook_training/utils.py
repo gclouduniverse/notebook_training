@@ -16,10 +16,12 @@ def get_gcs_uri(bucket, path):
     return "gs://{}/{}".format(bucket, path)
 
 def get_notebook_gcs_path(notebook_name, timestamp_str):
-    return "{}/{}".format(notebook_name, timestamp_str)
+    index = notebook_name.rfind(".")
+    name = notebook_name[:index]
+    return "{}_{}.ipynb".format(name, timestamp_str)
 
 def is_gcs_uri(path):
-    return path.startswith("gs://")
+    return path and path.startswith("gs://")
 
 def get_job_id(notebook_name, timestamp_str):
     job_id = "job_{}_{}".format(notebook_name, timestamp_str)
@@ -34,3 +36,7 @@ def get_output_notebook(input_notebook):
         return re.sub(r'\.ipynb$', '_output.ipynb', input_notebook)
     else:
         return input_notebook + '_output'
+
+# Checks if the given notebooks path is in given folder
+def notebook_is_in_path(input_notebook, folder):
+    return folder in input_notebook

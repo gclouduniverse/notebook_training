@@ -9,12 +9,14 @@ def parse_args():
   parser.add_argument("--output-notebook", required=False)
   parser.add_argument("--job-id", required=False)
   parser.add_argument("--region", required=False)
-  parser.add_argument("--worker-machine-type", required=False)
+  parser.add_argument("--scale-tier", required=False)
+  parser.add_argument("--master-type", required=False)
   parser.add_argument("--bucket-name", required=False)
   parser.add_argument("--max-running-time", required=False)
   parser.add_argument("--container-uri", required=False)
   parser.add_argument("--accelerator-type", required=False)
   parser.add_argument("--service-account", required=False)
+  parser.add_argument("--input-folder", required=False)
 
   args = parser.parse_args()
   return args
