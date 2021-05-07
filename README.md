@@ -25,6 +25,7 @@ The only required parameter is --input-notebook.
 This parameter accepts local path or GCS path.
 
 For example:
+
 ```
 gcloud-notebook-training --input-notebook /local/path/to/notebook.ipynb
 ```
@@ -34,13 +35,14 @@ or
 gcloud-notebook-training --input-notebook gs://bucket_name/notebook.ipynb
 ```
 
-The output-notebook path can be specified explicitely.
-Same as the input-notebook, this parameter accepts local path or GCS path.
+The `output-notebook` path can be specified explicitly.
 
-If the output-notebook is not specified, it will be implied as input-notebook plus 'output' suffix.
+Same as the `input-notebook`, this parameter accepts local path or GCS path.
 
-If output-notebook is a GCS path, then the tool will only submit the training job and exit.
-If output-notebook is a local path, then the tool will wait until the training job succeeds, and then will download the output notebook.
+If the `output-notebook` is not specified, it will be implied as `input-notebook` plus 'output' suffix.
 
-container-uri parameter specifies the container used by training job.
+If `output-notebook` is a GCS path, then the tool will only submit the training job and exit.
+If `output-notebook` is a local path, then the tool will wait until the training job succeeds, and then will download the output notebook.
+
+`container-uri` parameter specifies the container used by training job.
 If this parameter is not specified, the tool will try to pull this information from the notebook metadata.
